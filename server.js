@@ -20,5 +20,9 @@ mongoose
     console.log(err);
     console.log("Sorry something is wrong connection faield");
   });
-
+app.use("/", (req, res) => {
+  res.status(200).json({
+    root: "hello",
+  });
+});
 app.use("/points", evsRouter);
