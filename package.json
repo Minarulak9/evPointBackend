@@ -16,5 +16,8 @@
   "main": "server.js",
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "engines": {
+    "node":"16.15.0"
+  }
 }
