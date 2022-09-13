@@ -19,22 +19,21 @@ const getEvPoints = async (req, res) => {
 };
 const getNearestEvPoint = async (req, res) => {
   try {
-    const { lat, lng } = req.body.lat;
-    console.log(req.body);
-    const points = await pointsModel.aggregate([
-      {
-        $geoNear: {
-          near: {
-            type: "Point",
-            coordinates: [parseFloat(lng), parseFloat(lat)],
+    const { lat, lng } = req.params;
+    const points = await pointsModel
+      .find({
+        geometry: {
+          $nearSphere: {
+            $geometry: {
+              type: "Point",
+              coordinates: [parseFloat(lng), parseFloat(lat)],
+            },
+            $maxDistance: 10000*10000,
+            $minDistance: 0,
           },
-          key: "location",
-          maxDistance: parseInt(1000) * 1609,
-          distanceField: "dist.calculated",
-          spherical: true,
         },
-      },
-    ]);
+      })
+      .limit(10);
     res.status(200).json({
       status: "success",
       result: points.length,

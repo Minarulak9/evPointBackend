@@ -51,6 +51,10 @@ const pointsSchema = new mongoose.Schema({
       maxLength: 12,
       required: [true, "Phone number required"],
     },
+    pointType:{
+      type:String,
+      required:[true, "pointype is required"],
+    },
     tottalPort: Number,
     availablePort: Number,
     open24x7: Boolean,
