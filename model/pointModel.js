@@ -2,12 +2,13 @@ const mongoose = require("mongoose");
 const pointsSchema = new mongoose.Schema({
   type: {
     type: String,
-    default: "point",
+    default: "Feature",
     required: [true, "type is required"],
   },
   geometry: {
     type: {
       type: String,
+      default: "Point",
       required: [true, "type is required field"],
     },
     coordinates: {
@@ -35,12 +36,12 @@ const pointsSchema = new mongoose.Schema({
       streetNumber: String,
       postalCode: String,
     },
-    lat:{
-      type:Number,
+    lat: {
+      type: Number,
       required: [true, "lat is required"],
     },
-    lng:{
-      type:Number,
+    lng: {
+      type: Number,
       required: [true, "lng is required"],
     },
     onlinePyment: Boolean,
@@ -56,6 +57,10 @@ const pointsSchema = new mongoose.Schema({
     openTime: String,
     closingTime: String,
     restroom: Boolean,
+    wheller: {
+      two: Boolean,
+      four: Boolean,
+    },
   },
 });
 const pointsModel = new mongoose.model("points", pointsSchema);

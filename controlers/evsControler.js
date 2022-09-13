@@ -1,6 +1,6 @@
 const pointsModel = require("./../model/pointModel");
 const getAllPoints = async (req, res) => {
-  res.status(200).json({ name: "rahl" });
+  res.status(200).json({ all: "NULL" });
 };
 const getEvPoints = async (req, res) => {
   try {
@@ -17,14 +17,24 @@ const getEvPoints = async (req, res) => {
     });
   }
 };
-const getEvPoint = async (req, res) => {
+const getNearestEvPoint = async (req, res) => {
   try {
-    let { lat } = req.params;
-    let latt = +lat;
-    console.log(latt);
-    const points = await pointsModel.find({
-      lat: latt,
-    });
+    const { lat, lng } = req.body.lat;
+    console.log(req.body);
+    const points = await pointsModel.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: [parseFloat(lng), parseFloat(lat)],
+          },
+          key: "location",
+          maxDistance: parseInt(1000) * 1609,
+          distanceField: "dist.calculated",
+          spherical: true,
+        },
+      },
+    ]);
     res.status(200).json({
       status: "success",
       result: points.length,
@@ -54,8 +64,8 @@ const createEvPoint = async (req, res) => {
 
 module.exports = {
   getEvPoints,
-  getEvPoint,
   getAllPoints,
   createEvPoint,
   updatePoint,
+  getNearestEvPoint,
 };

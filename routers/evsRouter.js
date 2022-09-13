@@ -8,8 +8,7 @@ router
   .get(evsControler.getEvPoints)
   .post(evsControler.createEvPoint);
 router
-  .route("/evs/:lat")
-  .get(evsControler.getEvPoint)
-  .patch(evsControler.updatePoint);
+  .route("/evs/nearest")
+  .get(evsControler.getNearestEvPoint)
 router.route("/garage").get(garageControler.getGaragePoints);
 module.exports = router;
