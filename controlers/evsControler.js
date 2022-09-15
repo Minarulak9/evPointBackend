@@ -17,7 +17,7 @@ const getEvPoints = async (req, res) => {
     });
   }
 };
-const getNearestEvPoint = async (req, res) => {
+const getNearestPoint = async (req, res) => {
   try {
     const { lat, lng } = req.params;
     const points = await pointsModel
@@ -28,7 +28,7 @@ const getNearestEvPoint = async (req, res) => {
               type: "Point",
               coordinates: [parseFloat(lng), parseFloat(lat)],
             },
-            $maxDistance: 10000*10000,
+            $maxDistance: 10000 * 10000,
             $minDistance: 0,
           },
         },
@@ -46,6 +46,67 @@ const getNearestEvPoint = async (req, res) => {
     });
   }
 };
+const getNearesGtPoint = async (req, res) => {
+  try {
+    const { lat, lng } = req.params;
+    const points = await pointsModel
+      .find({ "properties.pointType": "garage" })
+      .find({
+        geometry: {
+          $nearSphere: {
+            $geometry: {
+              type: "Point",
+              coordinates: [parseFloat(lng), parseFloat(lat)],
+            },
+            $maxDistance: 10000 * 10000,
+            $minDistance: 0,
+          },
+        },
+      })
+      .limit(10);
+    res.status(200).json({
+      status: "success",
+      result: points.length,
+      points,
+    });
+  } catch (error) {
+    res.status(501).json({
+      message: "ev point not getting something is wrong",
+      error,
+    });
+  }
+};
+const getNearesEvtPoint = async (req, res) => {
+  try {
+    const { lat, lng } = req.params;
+    const points = await pointsModel
+      .find({ "properties.pointType": "ev" })
+      .find({
+        geometry: {
+          $nearSphere: {
+            $geometry: {
+              type: "Point",
+              coordinates: [parseFloat(lng), parseFloat(lat)],
+            },
+            $maxDistance: 10000 * 10000,
+            $minDistance: 0,
+          },
+        },
+      })
+      .limit(10);
+    res.status(200).json({
+      status: "success",
+      result: points.length,
+      points,
+    });
+  } catch (error) {
+    res.status(501).json({
+      message: "ev point not getting something is wrong",
+      error,
+    });
+  }
+};
+
 const updatePoint = async (req, res) => {
   res.send("feature not implemented successfully");
 };
@@ -66,5 +127,7 @@ module.exports = {
   getAllPoints,
   createEvPoint,
   updatePoint,
-  getNearestEvPoint,
+  getNearestPoint,
+  getNearesGtPoint,
+  getNearesEvtPoint
 };
